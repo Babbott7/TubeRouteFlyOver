@@ -6,6 +6,7 @@ import Navigation from '../Navigation/Navigation';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Map.css'
 import parseTubeLineData from '../../utils/parseTubeLineData';
+import getLineColour from '../../utils/getLineColour';
 
 function Map() {
 
@@ -34,31 +35,63 @@ function Map() {
         (layer) => layer.type === 'symbol' && layer.layout['text-field']
       ).id;
 
-      mapRef.current.addSource('route', {
-        type: 'geojson',
-        data: {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'LineString',
-            coordinates: parseTubeLineData()
-          }
-        }
-      });
+      const tubeLineData = parseTubeLineData();
 
-      mapRef.current.addLayer({
-        id: 'route',
-        type: 'line',
-        source: 'route',
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round'
-        },
-        paint: {
-          'line-color': '#888',
-          'line-width': 10
+      tubeLineData.forEach((line) => {
+        if (getLineColour(line.name)) {
+          mapRef.current.addSource(`${line.name}`, {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates: line.data
+              }
+            }
+          })
+          mapRef.current.addLayer({
+            id: `${line.name}`,
+            type: 'line',
+            source: `${line.name}`,
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': getLineColour(line.name),
+              'line-width': 10
+            }
+          })
         }
-      });
+
+      })
+
+      // mapRef.current.addSource('route', {
+      //   type: 'geojson',
+      //   data: {
+      //     type: 'Feature',
+      //     properties: {},
+      //     geometry: {
+      //       type: 'LineString',
+      //       coordinates: parseTubeLineData()
+      //     }
+      //   }
+      // });
+
+      // mapRef.current.addLayer({
+      //   id: 'route',
+      //   type: 'line',
+      //   source: 'route',
+      //   layout: {
+      //     'line-join': 'round',
+      //     'line-cap': 'round'
+      //   },
+      //   paint: {
+      //     'line-color': '#888',
+      //     'line-width': 10
+      //   }
+      // });
 
       mapRef.current.addLayer(
         {
