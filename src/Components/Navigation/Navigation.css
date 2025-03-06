@@ -1,0 +1,10 @@
+.Card {
+    position: absolute;
+    min-height: 20vh;
+    min-width: 15vw;
+    top: 0;
+
+    background-color: white;
+    border-radius: 10px;
+    margin: 20px;
+}

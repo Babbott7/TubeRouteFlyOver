@@ -1,5 +1,5 @@
 
-import Map from './Map/Map';
+import Map from './Components/Map/Map';
 
 import './App.css';
 
